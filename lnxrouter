@@ -1740,7 +1740,7 @@ write_dnsmasq_conf() {
 		dhcp-range=${GATEWAY%.*}.10,${GATEWAY%.*}.250,255.255.255.0
 		dhcp-option-force=option:router,${GATEWAY}
 		#log-dhcp
-		log-facility=/dev/stdout
+		log-facility=-
 		bogus-priv
 		domain-needed
 	EOF
