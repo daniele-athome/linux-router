@@ -1366,7 +1366,7 @@ list_clients() { # passive mode. (use 'arp-scan' or 'netdiscover' if want active
 
     echo "$IFACE ($(get_interface_mac $IFACE)) neighbors:"
     
-    local fmt="%-19s%-41s%-20s%s" # string length: MAC 17, ipv4 15, ipv6 39, hostname ?
+    local fmt="%-19s%-41s%-30s%s" # string length: MAC 17, ipv4 15, ipv6 39, hostname ?
     printf "$fmt\n"  "MAC" "IP" "HOSTNAME" "INFO"
     
     local line
