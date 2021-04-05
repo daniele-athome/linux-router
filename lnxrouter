@@ -47,6 +47,8 @@ Options:
     --catch-dns             Transparent DNS proxy, redirect packets(TCP/UDP) 
                             whose destination port is 53 to this host
     --log-dns               Show DNS query log
+    --dhcp-hostsfile <file>
+                            Uses a file for static DHCP leases
     --dhcp-dns <IP1[,IP2]>|no
                             Set IPv4 DNS offered by DHCP (default: this host)
     --dhcp-dns6 <IP1[,IP2]>|no
@@ -147,6 +149,7 @@ define_global_variables(){
     CATCH_DNS=0   # catch clients 53 port packets
     SHOW_DNS_QUERY=0  # log dns
     ETC_HOSTS=0
+    DHCP_HOSTSFILE=
     ADDN_HOSTS=
     CONN_IFACE=    # which interface user choose to use to create network
     INTERNET_IFACE= # which interface to get Internet from
@@ -308,6 +311,11 @@ parse_user_options(){
             --log-dns)
                 shift
                 SHOW_DNS_QUERY=1
+                ;;
+            --dhcp-hostsfile)
+                shift
+                DHCP_HOSTSFILE="$1"
+                shift
                 ;;
             --hostname)
                 shift
@@ -1762,6 +1770,9 @@ write_dnsmasq_conf() {
     
     if [[ ! "$dnsmasq_NO_DNS" -eq 0 ]]; then
         echo "port=0"  >> "$CONFDIR/dnsmasq.conf"
+    fi
+    if [[ -n "$DHCP_HOSTSFILE" ]]; then
+      	echo "dhcp-hostsfile=${DHCP_HOSTSFILE}" >> "$CONFDIR/dnsmasq.conf"
     fi
 
     [[ -n "$MTU" ]] && echo "dhcp-option-force=option:mtu,${MTU}" >> "$CONFDIR/dnsmasq.conf"
