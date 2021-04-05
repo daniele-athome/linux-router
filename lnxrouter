@@ -1739,6 +1739,7 @@ write_dnsmasq_conf() {
 		no-dhcp-interface=lo
 		dhcp-range=${GATEWAY%.*}.10,${GATEWAY%.*}.250,255.255.255.0
 		dhcp-option-force=option:router,${GATEWAY}
+		dhcp-generate-names
 		#log-dhcp
 		log-facility=-
 		bogus-priv
