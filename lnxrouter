@@ -1045,25 +1045,6 @@ iptb()
     return $?
 }
 
-disable_unwanted_forwarding() {
-    for iv in "${IP_VERs[@]}"; do
-        if [[ "$INTERNET_IFACE" ]]; then
-            iptb "$iv" n filter I FORWARD  \
-                -i "$SUBNET_IFACE"      ! -o "$INTERNET_IFACE" \
-                -j REJECT || die
-            iptb "$iv" n filter I FORWARD  \
-                ! -i "$INTERNET_IFACE"    -o "$SUBNET_IFACE" \
-                -j REJECT || die
-        fi
-
-        if [[ "$SHARE_METHOD" == 'redsocks' || "$SHARE_METHOD" == 'none' \
-            || ( "$iv" -eq "4" && "$NO4" -eq 1  ) ]];then
-            iptb "$iv" n filter I FORWARD  -i "$SUBNET_IFACE"  -j REJECT || die
-            iptb "$iv" n filter I FORWARD  -o "$SUBNET_IFACE"  -j REJECT || die
-        fi
-    done
-
-}
 start_nat() {
     local SUBNET_NET
 
@@ -2264,8 +2245,6 @@ if [[ "$IPV6" -eq 0 ]]; then
 else
     IP_VERs=("4" "6")
 fi
-
-disable_unwanted_forwarding
 
 
 # bring subnet interface up
